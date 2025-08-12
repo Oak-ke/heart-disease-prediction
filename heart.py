@@ -22,3 +22,31 @@ print(df_encoded.head())
 # Print the shape of the new DataFrame to see how many new columns were created
 print(f"Original shape: {df.shape}")
 print(f"Encoded shape: {df_encoded.shape}")
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+X = df_encoded.drop('target', axis=1) # Features
+y = df_encoded['target'] # Target variable
+# Assuming 'X' is your features and 'y' is your target variable
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print("Data has been successfully split!")
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+
+# Initialize the model with an increased number of iterations
+# For example, let's try 1000 iterations
+model = LogisticRegression(max_iter=1000)
+
+# Now, fit the model as usual
+model.fit(X_train, y_train)
+
+
+from sklearn.metrics import accuracy_score
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy:.2f}")
+
