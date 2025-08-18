@@ -1,0 +1,75 @@
+Heart Disease Prediction Project
+
+The purpose of this project was to do an introductory project into the fundamental concepts of machine learning and understand how to builld a prediction model. The dataset I used was from Kaggle(https://www.kaggle.com/code/desalegngeb/heart-disease-predictions). I downloaded a csv that contained features and targets to be used in the training of this model.
+
+
+Steps
+
+1. Data Prepping
+I imported Pandas as pd -> Pandas is a python Liblary used in Data manupilation. The first interesting block of code I encountered was pd.read_csv('heart.csv") This command allowed me to store data to be read by pandas. It stored it in a table called a data frame.
+Functions I got to understand include 
+df.head() - This brough out the first 5 rows
+df.info() and df.isnull().sum() - These lines perform health checks on your data. It tells you how many columns you have, what kind of data is in each column and confirms that there are no missing values.
+
+2. Data Cleaning 
+Machine learning models only understand numbers, so in the event that your columns have Text you need to convert them into numbers
+For Example
+Categorical_columns['a','b'] - This is a list of all columns that contain categories instead of continous numbers
+pd.get_dummies(....) - We store it in a variable called df.encoded.
+
+df-encoded = pd.get_dummies(df, column = categorical_col, drop_First = True)
+Key points to note 
+df-encoded = Is the converted columns into numerical values (0, 1)
+pd.get_dummies() = This is the pandas function that performs one hot encoding on categorical columns
+df = This is the raw dataframe
+categorical_column = ['a','b'] this is the column(s) that need to be changed to numeral values
+drop_first=True = This drops the first category in each encoded column to avoid multicollinearity
+
+
+3. Splitting & Scaling 
+I think this was the most interesting and challenging part of this learning curve. Aparently it is the most important part of the process. This part splits data and makes sure all the numbers are on a singular scale 
+
+From Sklearn.model_selection import train_test_split - So this function splits data into two sets 1. The training set and 2. The Test set. The purpose of this is to see how well a machine learning module generalizes to unseen data. It helps us accomplish two things.
+1. Overfitting  - A model that performs well on trained data and poorly on testing data
+2. Get an unbiased Evaluation - The testing set servers as a stand-in for real data.
+
+From Sklearn.preprocessing import standard scalar - So this is a class that is used to standardize your features that each feature has a mean of 0 and a standard deviation of 1. This is cruital for machine learning algorithims like like Linear Regression, SVM, and Neural Networks) because:
+1. Equal Contribution: If a feature has a very large range of values (e.g., salary) while another has a small range (e.g., number of children), the algorithm might disproportionately weigh the feature with the larger values. Scaling the data prevents this.
+2. Faster Convergence: For algorithms that rely on gradient descent, having all features on a similar scale can make the optimization process much faster.
+
+Here we are splitting the into features and target ( What we are trying to predict )
+X = df_encoded.drop('target', axis=1)
+Y = df_encoded['target']
+
+X_train, X_test, Y_train, Y_test = train_Test_split(x,y, testsize=0.2, random_state=42)
+This line takes x and y and splits them into 4 smaller sets
+X_train and  y_train - Are the features and target used to train the model
+X_test and y_test Are the features and targer used to test the model
+
+random_state = 42 Ensures that the split is reproducable. If you run the code multiple times you will get the same output
+
+
+X_train_scaler = scalar.fit_transform (X_train) - This command fits the scalar to the training data and transforms the data 
+.fit( X_train ) - The fit part of this function calculates the mean and standard deviation for each feature in the training set (X_train). It learns the scaling parameters from this data
+.transform(X_Train) - The transform part then applies these learned parameters to the training data. The result is a new scaled training set called X_train scaled.
+
+X_test_Scaled.scalar.transform(X_Test) - This applies the same scaling to the test Data
+
+4. Training Evaluation
+
+From Sklearn.Linear model import Logistic Regression
+From Sklearn.metrics import Accuracy_Score
+
+model = Logistic regression(max_iter=1000) - This line of code initializes a machine learning model. In this case we are using Logistic Regression because it is great for yes/no classification problems
+model = fit(X_train_scaled y_train) - This is the training command the model learns the scaled training data and how to predict the outcome (y_train)
+
+y_pred = model.predict(x_test_scaled) - After training, you ask the model to make the predictions on the scaled testing data(x_test_scaled) which it hasn't seen before
+accuracy = accuracy_score(y_test, y_pred) - This calculates the accuracy score by comparing your model's prediction to the actual score 
+
+print (f"model accuracy: {accuracy :.2f}) - This prints the accuracy
+
+
+
+I think the key take away for me from this learning point is the realization that we need to standardize our X_train and X_test values in order to train our classification models. I also got to appriaciate and understand splitting of data in the test and train sets, interesting learning points. 
+
+Happy Reading!
